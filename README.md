@@ -6,7 +6,12 @@ A React Native app for tracking workout mesocycles, built with Expo.
 
 - **Mesocycle**: A training block (4-6 weeks) with programmed progression
 - **Template**: Predefined workout splits (Upper/Lower, PPL, Full Body)
-- **Progression**: Weight/rep schemes that progress throughout the mesocycle
+- **Progression**: Each exercise follows programmed progression:
+  - Week 1: 3x8
+  - Week 2: 3x10
+  - Week 3: 4x8
+  - Week 4: 4x10
+  - Week 5+: Deload week if included
 
 ## Project Structure
 
@@ -15,69 +20,88 @@ app/
 ├── (tabs)/                   # Tab-based navigation
 │   ├── _layout.tsx          # Tab configuration
 │   ├── index.tsx            # Home screen (mesocycle list)
-│   └── workout.tsx          # Current workout view
+│   └── workout.tsx          # Current workout view & set logging
 ├── template/                 # Template configuration
 │   ├── [id].tsx             # Template details & configuration
 │   └── [id]/
 │       └── exercises.tsx     # Exercise selection for template
 └── templates.tsx            # Template selection screen
 
+components/
+└── SetCompletionModal.tsx    # Modal for logging sets/weights
+
 constants/
-├── exercises.ts             # Exercise library
-└── templates.ts            # Workout templates/splits
+├── exercises.ts             # Exercise library by muscle group
+└── templates.ts            # Predefined workout templates
 
 store/
-├── types.ts                # TypeScript types/interfaces
-└── workoutStore.ts         # Zustand state management
+├── types.ts                # TypeScript interfaces
+└── workoutStore.ts         # State management & workout generation
 ```
 
-## Data Flow
+## Features
 
-1. User selects a template (templates.tsx)
-2. Configures weeks/days ([id].tsx)
-3. Selects exercises per muscle group (exercises.tsx)
-4. Creates mesocycle which generates workouts
-5. Executes workouts and logs progress
+✅ Implemented:
 
-## Key Technologies
-
-- Expo Router for navigation
-- NativeWind (v2) for styling
-- Zustand for state management
-- Expo for development/building
-
-## Current Implementation Status
-
-✅ Complete:
-
-- Navigation structure
-- Template selection
-- Exercise selection UI
-- Data layer foundation
+- Full navigation flow with tabs and modals
+- Template selection and configuration
+- Exercise selection with auto-fill capability
+- Workout generation with progressive overload
+- Set tracking (complete/skip) with weight/rep logging
+- Persistent storage with Zustand
+- Muscle group targeting system
 
 🚧 In Progress:
 
-- Workout generation
-- Progress tracking
+- Weight progression suggestions
+- Basic analytics/progress tracking
 
-❌ Not Started:
+❌ Planned:
 
-- Workout execution view
-- Calendar/schedule view
+- Calendar view
+- Exercise history
+- Weight progression visualization
+- Export/backup functionality
 
-## Next Steps
+## Data Flow
 
-1. Implement workout generation with progressive overload
-2. Create workout execution view
-3. Add progress tracking
-4. Implement calendar view
+1. Template Selection:
+   - User picks a workout split template
+   - Configures weeks (4-6) and days per week
+2. Exercise Selection:
+
+   - For each day, pick exercises per muscle group
+   - Auto-fill option available for quick setup
+
+3. Workout Generation:
+
+   - Creates full mesocycle with progressive overload
+   - Sets organized by exercise and muscle group
+
+4. Workout Execution:
+   - Shows current incomplete workout
+   - Log weights and reps or skip sets
+   - Tracks progress through mesocycle
 
 ## Development
 
 ```bash
-# Install dependencies
-npm install
-
 # Start development server
 npx expo start
 ```
+
+## State Management
+
+Using Zustand for:
+
+- Mesocycle management
+- Workout progression
+- Set completion tracking
+- Exercise selections
+
+## Current Focus
+
+1. Bug fixes in workout generation
+2. Weight progression logic
+3. Performance optimizations
+4. User experience improvements
