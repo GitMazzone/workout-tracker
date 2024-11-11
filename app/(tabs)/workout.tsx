@@ -5,6 +5,8 @@ import { EXERCISES } from '@/constants/exercises';
 import { MuscleGroup, WorkoutSet } from '@/store/types';
 import { Calendar } from 'lucide-react-native';
 import { ExerciseSetList } from '@/components/ExerciseSetList';
+import { WorkoutCalendarModal } from '@/components/WorkoutCalendarModal';
+import { useState } from 'react';
 
 const getExerciseMuscleGroup = (exerciseId: string): MuscleGroup | null => {
 	const exercise = EXERCISES.find((e) => e.id === exerciseId);
@@ -12,6 +14,7 @@ const getExerciseMuscleGroup = (exerciseId: string): MuscleGroup | null => {
 };
 
 export default function WorkoutScreen() {
+	const [calendarVisible, setCalendarVisible] = useState(false);
 	const { mesocycles, activeMesocycle } = useWorkoutStore();
 	const currentMeso = mesocycles.find((m) => m.id === activeMesocycle);
 
@@ -69,12 +72,20 @@ export default function WorkoutScreen() {
 						<Text className={'text-2xl font-bold'}>{currentMeso.name}</Text>
 						<TouchableOpacity
 							className={'p-2 rounded-lg bg-gray-100'}
-							onPress={() => {
-								// TODO: Show calendar modal
-							}}
+							onPress={() => setCalendarVisible(true)}
 						>
 							<Calendar size={24} color='#4B5563' />
 						</TouchableOpacity>
+						<WorkoutCalendarModal
+							visible={calendarVisible}
+							onClose={() => setCalendarVisible(false)}
+							mesocycle={currentMeso}
+							currentWorkoutId={nextWorkout?.id}
+							onSelectWorkout={(workoutId) => {
+								// TODO: Add navigation between workouts
+								// This will require a new store action to set the current workout
+							}}
+						/>
 					</View>
 
 					{Object.entries(exerciseGroups).map(([muscleGroup, exercises]) => (
