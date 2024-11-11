@@ -137,7 +137,7 @@ export default function ExerciseSelection() {
 			<ScrollView
 				horizontal
 				showsHorizontalScrollIndicator={false}
-				className={'py-2 px-4 border-b border-gray-200'}
+				className={'py-2 mx-auto border-b border-gray-200 max-h-14'}
 			>
 				{Array.from({ length: Number(days) }, (_, i) => (
 					<DayTab

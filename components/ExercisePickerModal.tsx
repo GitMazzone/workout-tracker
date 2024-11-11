@@ -59,7 +59,7 @@ export default function ExercisePickerModal({
 				<ScrollView
 					horizontal
 					showsHorizontalScrollIndicator={false}
-					className={'py-2 px-4 border-b border-gray-200'}
+					className={'py-2 px-4 border-b border-gray-200 max-h-14'}
 				>
 					<TouchableOpacity
 						className={`px-4 py-2 rounded-lg mr-2 ${
