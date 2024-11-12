@@ -1,10 +1,11 @@
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { useWorkoutStore } from '@/store/workout';
 import { Settings } from 'lucide-react-native';
 import { useState } from 'react';
 import { SettingsModal } from '@/components/SettingsModal';
+import { MesoMenu } from '@/components/MesoMenu';
 
 export default function Home() {
 	const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -13,9 +14,9 @@ export default function Home() {
 	if (mesocycles.length === 0) {
 		return (
 			<SafeAreaView className={'flex-1'}>
-				<View className={'flex-1 p-4 bg-white'}>
+				<View className={'flex-1 p-4 bg-white relative'}>
 					<TouchableOpacity
-						className={'absolute top-4 right-4 p-2'}
+						className={'absolute top-4 right-4 p-2 z-10'}
 						onPress={() => setIsSettingsOpen(true)}
 					>
 						<Settings size={24} color={'#0284c7'} />
@@ -64,22 +65,31 @@ export default function Home() {
 
 				<ScrollView className={'flex-1 p-4'}>
 					{mesocycles.map((meso) => (
-						<TouchableOpacity
+						<View
 							key={meso.id}
 							className={
-								'bg-white border border-gray-200 rounded-lg p-4 mb-4 shadow-sm'
+								'bg-white border border-gray-200 rounded-lg mb-4 shadow-sm'
 							}
-							onPress={() => {
-								setActiveMesocycle(meso.id);
-								router.push('/(tabs)/workout');
-							}}
 						>
-							<Text className={'text-lg font-semibold'}>{meso.name}</Text>
-							<Text className={'text-gray-600'}>
-								{meso.weeks} weeks • {Object.keys(meso.template).length}{' '}
-								workouts/week
-							</Text>
-						</TouchableOpacity>
+							<TouchableOpacity
+								className={'flex-1 p-4'}
+								onPress={() => {
+									setActiveMesocycle(meso.id);
+									router.push('/(tabs)/workout');
+								}}
+							>
+								<View className={'flex-row justify-between items-start'}>
+									<View className={'flex-1 mr-2'}>
+										<Text className={'text-lg font-semibold'}>{meso.name}</Text>
+										<Text className={'text-gray-600'}>
+											{meso.weeks} weeks • {Object.keys(meso.template).length}{' '}
+											workouts/week
+										</Text>
+									</View>
+									<MesoMenu mesoId={meso.id} mesoName={meso.name} />
+								</View>
+							</TouchableOpacity>
+						</View>
 					))}
 				</ScrollView>
 

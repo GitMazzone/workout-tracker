@@ -4,6 +4,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
 	createMesocycle,
 	setActiveMesocycle,
+	deleteMesocycle,
+	updateMesocycleName,
 } from './actions/mesocycle.actions';
 import {
 	completeSet,
@@ -37,6 +39,8 @@ export const useWorkoutStore = create<WorkoutState>()(
 			undoSetCompletion: undoSetCompletion(setState),
 			updateSetWeight: updateSetWeight(setState),
 			updateSetReps: updateSetReps(setState),
+			deleteMesocycle: deleteMesocycle(setState),
+			updateMesocycleName: updateMesocycleName(setState),
 		}),
 		{
 			name: 'workout-storage',

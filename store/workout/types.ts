@@ -42,6 +42,8 @@ export interface WorkoutState {
 	activeMesocycle: string | null;
 	currentWorkoutId: string | null;
 	createMesocycle: (template: MesocycleTemplate) => void;
+	deleteMesocycle: (id: string) => void;
+	updateMesocycleName: (id: string, name: string) => void;
 	setActiveMesocycle: (id: string) => void;
 	setCurrentWorkout: (id: string) => void;
 	navigateWorkout: (direction: 'next' | 'prev') => void;

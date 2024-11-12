@@ -39,3 +39,24 @@ export const createMesocycle =
 export const setActiveMesocycle = (setState: any) => (id: string) => {
 	setState((state: WorkoutState) => ({ ...state, activeMesocycle: id }));
 };
+
+export const deleteMesocycle = (setState: any) => (id: string) => {
+	setState((state: WorkoutState) => ({
+		...state,
+		mesocycles: state.mesocycles.filter((meso) => meso.id !== id),
+		activeMesocycle:
+			state.activeMesocycle === id ? null : state.activeMesocycle,
+		currentWorkoutId:
+			state.activeMesocycle === id ? null : state.currentWorkoutId,
+	}));
+};
+
+export const updateMesocycleName =
+	(setState: any) => (id: string, name: string) => {
+		setState((state: WorkoutState) => ({
+			...state,
+			mesocycles: state.mesocycles.map((meso) =>
+				meso.id === id ? { ...meso, name } : meso
+			),
+		}));
+	};
