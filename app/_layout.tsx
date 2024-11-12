@@ -5,6 +5,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import 'react-native-reanimated';
+import Toast from 'react-native-toast-message';
 
 export { ErrorBoundary } from 'expo-router';
 
@@ -43,6 +44,7 @@ function RootLayoutNav() {
 			<Stack>
 				<Stack.Screen name='(tabs)' options={{ headerShown: false }} />
 			</Stack>
+			<Toast />
 		</SafeAreaProvider>
 	);
 }
