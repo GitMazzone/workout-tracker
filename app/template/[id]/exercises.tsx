@@ -3,9 +3,9 @@ import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { TEMPLATES } from '@/constants/templates';
 import { useState } from 'react';
 import ExercisePickerModal from '@/components/ExercisePickerModal';
-import { MesocycleTemplate, MuscleGroup } from '@/store/types';
+import { MuscleGroup } from '@/store/types';
 import { EXERCISES } from '@/constants/exercises';
-import { useWorkoutStore } from '@/store/workoutStore';
+import { useWorkoutStore, MesocycleTemplate } from '@/store/workout';
 
 const autoSelectExercises = (template: (typeof TEMPLATES)[0], days: number) => {
 	const selections: { [key: string]: string } = {};

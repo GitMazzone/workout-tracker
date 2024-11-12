@@ -1,8 +1,7 @@
-// app/(tabs)/index.tsx
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import { useWorkoutStore } from '@/store/workoutStore';
+import { useWorkoutStore } from '@/store/workout';
 
 export default function Home() {
 	// Get both the mesocycles and the store itself for direct action calls

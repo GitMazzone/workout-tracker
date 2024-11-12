@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity, Modal, ScrollView } from 'react-native';
 import { X, CheckCircle, Circle } from 'lucide-react-native';
-import { Mesocycle } from '@/store/types';
+import { Mesocycle } from '@/store/workout';
 import { useMemo } from 'react';
 
 interface Props {

@@ -1,107 +1,129 @@
 # Workout Tracker App
 
-A React Native app for tracking workout mesocycles, built with Expo.
+A React Native & Expo app for tracking progressive overload workouts through mesocycles.
 
-## Core Concepts
+## Project State & Next Steps
 
-- **Mesocycle**: A training block (4-6 weeks) with programmed progression
-- **Template**: Predefined workout splits (Upper/Lower, PPL, Full Body)
-- **Progression**: Each exercise follows programmed progression:
-  - Week 1: 3x8
-  - Week 2: 3x10
-  - Week 3: 4x8
-  - Week 4: 4x10
-  - Week 5+: Deload week if included
-
-## Project Structure
+We've just completed a major store refactor, breaking down the monolithic `workoutStore.ts` into:
 
 ```
-app/
-├── (tabs)/                   # Tab-based navigation
-│   ├── _layout.tsx          # Tab configuration
-│   ├── index.tsx            # Home screen (mesocycle list)
-│   └── workout.tsx          # Current workout view & set logging
-├── template/                 # Template configuration
-│   ├── [id].tsx             # Template details & configuration
-│   └── [id]/
-│       └── exercises.tsx     # Exercise selection for template
-└── templates.tsx            # Template selection screen
-
-components/
-└── SetCompletionModal.tsx    # Modal for logging sets/weights
-
-constants/
-├── exercises.ts             # Exercise library by muscle group
-└── templates.ts            # Predefined workout templates
-
-store/
-├── types.ts                # TypeScript interfaces
-└── workoutStore.ts         # State management & workout generation
+store/workout/
+├── types.ts               # Core type definitions
+├── actions/
+│   ├── mesocycle.ts      # Mesocycle management
+│   ├── sets.ts           # Set operations (complete, skip, etc.)
+│   └── workout.ts        # Workout navigation (next to implement)
+├── utils/
+│   ├── generateSets.ts   # Set generation logic
+│   └── generateWorkouts.ts# Workout generation
+└── index.ts              # Store composition
 ```
 
-## Features
+### Immediate Next Steps
 
-✅ Implemented:
+1. **Workout Navigation** (Next Priority)
 
-- Full navigation flow with tabs and modals
-- Template selection and configuration
-- Exercise selection with auto-fill capability
+   - Add `setActiveWorkout` action to store
+   - Implement navigation between workouts from calendar view
+   - Add prev/next workout controls in workout view
+   - Update workout view to show any workout, not just next incomplete
+
+2. **Weight Progression**
+
+   - Add weight suggestions based on previous workout performance
+   - Show previous weights for same exercise in earlier workouts
+   - Implement deload week logic
+
+3. **Analytics & Stats**
+   - Volume tracking per muscle group
+   - Progress visualization
+   - Success rate of target reps/weights
+
+## Core Features Status
+
+✅ Completed:
+
+- Navigation structure with tabs and modals
+- Template system with exercise selection
 - Workout generation with progressive overload
-- Set tracking (complete/skip) with weight/rep logging
-- Persistent storage with Zustand
-- Muscle group targeting system
+- Set tracking with weight/reps
+- Basic calendar view
+- Store refactoring
 
 🚧 In Progress:
 
+- Workout navigation system
 - Weight progression suggestions
-- Basic analytics/progress tracking
 
-❌ Planned:
+❌ Not Started:
 
-- Calendar view
-- Exercise history
-- Weight progression visualization
-- Export/backup functionality
+- Analytics/stats
+- Export functionality
+- Settings/preferences
 
-## Data Flow
+## Technical Details
 
-1. Template Selection:
-   - User picks a workout split template
-   - Configures weeks (4-6) and days per week
-2. Exercise Selection:
+### Navigation Structure
 
-   - For each day, pick exercises per muscle group
-   - Auto-fill option available for quick setup
+```
+app/
+├── (tabs)/
+│   ├── _layout.tsx     # Tab configuration
+│   ├── index.tsx       # Mesocycle list
+│   └── workout.tsx     # Active workout view
+├── template/
+│   ├── [id].tsx        # Template config
+│   └── [id]/exercises.tsx
+└── templates.tsx       # Template selection
+```
 
-3. Workout Generation:
+### Components
 
-   - Creates full mesocycle with progressive overload
-   - Sets organized by exercise and muscle group
+- `WorkoutCalendarModal`: Shows mesocycle progress, needs workout navigation
+- `ExerciseSetList`: Handles individual exercise sets, recently refactored
+- More components to be added for analytics
 
-4. Workout Execution:
-   - Shows current incomplete workout
-   - Log weights and reps or skip sets
-   - Tracks progress through mesocycle
+### State Management
+
+Using Zustand with newly separated concerns:
+
+- Mesocycle actions: Creation, activation
+- Set actions: Completion, skipping, weight/rep updates
+- Workout actions: Navigation (to be implemented)
+
+## Key Implementations
+
+### Progressive Overload Pattern
+
+```typescript
+Week 1: 3x8
+Week 2: 3x10
+Week 3: 4x8
+Week 4: 4x10
+Week 5+: Deload
+```
+
+### Data Flow
+
+1. Template selection → exercise picking
+2. Mesocycle generation with progressive overload
+3. Workout execution with weight/rep tracking
 
 ## Development
 
 ```bash
-# Start development server
-npx expo start
+# Dependencies
+npm install nativewind@2 @react-native-async-storage/async-storage zustand date-fns
+
+# Navigation
+npx expo install expo-router react-native-safe-area-context react-native-screens
 ```
 
-## State Management
+## Current Technical Debt
 
-Using Zustand for:
+- Need to improve error handling in store actions
+- Consider adding optimistic updates
+- Add proper TypeScript strict mode compliance
+- Implement proper form validation
 
-- Mesocycle management
-- Workout progression
-- Set completion tracking
-- Exercise selections
-
-## Current Focus
-
-1. Bug fixes in workout generation
-2. Weight progression logic
-3. Performance optimizations
-4. User experience improvements
+The next developer should focus on implementing the workout navigation system, starting with the store actions in `workout.ts` and then updating the UI components to support navigation between workouts.

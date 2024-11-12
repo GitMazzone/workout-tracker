@@ -40,4 +40,30 @@ export interface MesocycleTemplate {
 export interface WorkoutState {
 	mesocycles: Mesocycle[];
 	activeMesocycle: string | null;
+	currentWorkoutId: string | null;
+	createMesocycle: (template: MesocycleTemplate) => void;
+	setActiveMesocycle: (id: string) => void;
+	setCurrentWorkout: (id: string) => void;
+	navigateWorkout: (direction: 'next' | 'prev') => void;
+	completeSet: (
+		workoutId: string,
+		exercideId: string,
+		setIndex: number,
+		weight: number,
+		reps: number
+	) => void;
+	skipSet: (workoutId: string, setIndex: number) => void;
+	deleteSet: (workoutId: string, exerciseId: string, setIndex: number) => void;
+	addSet: (workoutId: string, exerciseId: string) => void;
+	undoSetCompletion: (
+		workoutId: string,
+		exercideId: string,
+		setIndex: number
+	) => void;
+	updateSetWeight: (
+		workoutId: string,
+		setIndex: number,
+		weight: number
+	) => void;
+	updateSetReps: (workoutId: string, setIndex: number, reps: number) => void;
 }

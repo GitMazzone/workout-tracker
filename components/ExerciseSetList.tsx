@@ -1,6 +1,5 @@
 import { EXERCISES } from '@/constants/exercises';
-import { WorkoutSet } from '@/store/types';
-import { useWorkoutStore } from '@/store/workoutStore';
+import { useWorkoutStore, WorkoutSet } from '@/store/workout';
 import { Trash2, Check, Plus } from 'lucide-react-native';
 import { View, TouchableOpacity, TextInput, Text } from 'react-native';
 import { useState, useEffect } from 'react';

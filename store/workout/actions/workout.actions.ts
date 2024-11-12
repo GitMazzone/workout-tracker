@@ -41,3 +41,33 @@ export const updateSetReps =
 			})),
 		}));
 	};
+
+export const setCurrentWorkout = (setState: any) => (workoutId: string) => {
+	setState((state: WorkoutState) => ({
+		...state,
+		currentWorkoutId: workoutId,
+	}));
+};
+
+export const navigateWorkout =
+	(setState: any) => (direction: 'next' | 'prev') => {
+		setState((state: WorkoutState) => {
+			const meso = state.mesocycles.find((m) => m.id === state.activeMesocycle);
+			if (!meso || !state.currentWorkoutId) return state;
+
+			const currentIndex = meso.workouts.findIndex(
+				(w) => w.id === state.currentWorkoutId
+			);
+			if (currentIndex === -1) return state;
+
+			const newIndex =
+				direction === 'next'
+					? Math.min(currentIndex + 1, meso.workouts.length - 1)
+					: Math.max(currentIndex - 1, 0);
+
+			return {
+				...state,
+				currentWorkoutId: meso.workouts[newIndex].id,
+			};
+		});
+	};
