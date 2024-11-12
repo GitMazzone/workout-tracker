@@ -7,6 +7,7 @@ import { generateWorkouts } from '../utils/generateWorkouts';
 export const createMesocycle =
 	(setState: any) => (template: MesocycleTemplate) => {
 		setState((state: WorkoutState) => {
+			const workouts = generateWorkouts(template);
 			const newMeso: Mesocycle = {
 				id: Date.now().toString(),
 				name: template.name,
@@ -26,12 +27,13 @@ export const createMesocycle =
 						{} as Mesocycle['template']
 					),
 				},
-				workouts: generateWorkouts(template),
+				workouts,
 			};
 
 			return {
 				mesocycles: [...state.mesocycles, newMeso],
 				activeMesocycle: newMeso.id,
+				currentWorkoutId: workouts[0]?.id || null, // Set first workout as current
 			};
 		});
 	};

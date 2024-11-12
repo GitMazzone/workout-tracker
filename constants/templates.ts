@@ -8,9 +8,20 @@ export interface WorkoutTemplate {
 	muscleGroups: {
 		[key: number]: MuscleGroup[]; // day of week -> muscle groups
 	};
+	isCustom?: boolean;
 }
 
 export const TEMPLATES: WorkoutTemplate[] = [
+	{
+		id: 'custom',
+		name: 'Custom Program',
+		description: 'Build your own program from scratch',
+		defaultDays: 3,
+		muscleGroups: {
+			// Empty template, will be populated based on user selection
+		},
+		isCustom: true,
+	},
 	{
 		id: 'upper-lower',
 		name: 'Upper/Lower Split',

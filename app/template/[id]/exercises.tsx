@@ -1,26 +1,27 @@
 import { View, Text, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { TEMPLATES } from '@/constants/templates';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import ExercisePickerModal from '@/components/ExercisePickerModal';
 import { MuscleGroup } from '@/store/types';
 import { EXERCISES } from '@/constants/exercises';
 import { useWorkoutStore, MesocycleTemplate } from '@/store/workout';
 
-const autoSelectExercises = (template: (typeof TEMPLATES)[0], days: number) => {
+const autoSelectExercises = (
+	muscleGroupsByDay: { [key: number]: MuscleGroup[] },
+	days: number
+) => {
 	const selections: { [key: string]: string } = {};
 
-	Array.from({ length: Number(days) }, (_, dayIndex) => {
-		const muscleGroups = template.muscleGroups[dayIndex] || [];
+	Array.from({ length: days }, (_, dayIndex) => {
+		const muscleGroups = muscleGroupsByDay[dayIndex] || [];
 
 		muscleGroups.forEach((muscleGroup) => {
-			// Find all exercises that target this muscle group
 			const availableExercises = EXERCISES.filter((e) =>
 				e.muscleGroups.includes(muscleGroup)
 			);
 
 			if (availableExercises.length > 0) {
-				// Pick a random exercise from available ones
 				const randomExercise =
 					availableExercises[
 						Math.floor(Math.random() * availableExercises.length)
@@ -57,10 +58,16 @@ function DayTab({ day, isActive, onPress }: DayTabProps) {
 }
 
 export default function ExerciseSelection() {
-	const { id, weeks, days } = useLocalSearchParams<{
+	const {
+		id,
+		weeks,
+		days,
+		muscleGroups: muscleGroupsParam,
+	} = useLocalSearchParams<{
 		id: string;
 		weeks: string;
 		days: string;
+		muscleGroups?: string;
 	}>();
 	const [activeDay, setActiveDay] = useState(0);
 	const [selectedMuscleGroup, setSelectedMuscleGroup] =
@@ -70,7 +77,20 @@ export default function ExerciseSelection() {
 	}>({});
 
 	const template = TEMPLATES.find((t) => t.id === id);
-	const muscleGroups = template?.muscleGroups[activeDay] || [];
+
+	// Handle both preset templates and custom muscle groups
+	const muscleGroupsByDay = useMemo(() => {
+		if (template?.isCustom && muscleGroupsParam) {
+			try {
+				return JSON.parse(muscleGroupsParam);
+			} catch {
+				return {};
+			}
+		}
+		return template?.muscleGroups || {};
+	}, [template, muscleGroupsParam]);
+
+	const muscleGroups = muscleGroupsByDay[activeDay] || [];
 
 	const handleSelectExercise = (exerciseId: string) => {
 		if (selectedMuscleGroup) {
@@ -83,21 +103,18 @@ export default function ExerciseSelection() {
 	};
 
 	const handleAutoFill = () => {
-		if (!template) return;
-		const autoSelected = autoSelectExercises(template, Number(days));
+		const autoSelected = autoSelectExercises(muscleGroupsByDay, Number(days));
 		setSelectedExercises(autoSelected);
 	};
 
 	const handleCreate = () => {
-		// Validate all required exercises are selected
-		const template = TEMPLATES.find((t) => t.id === id);
-		if (!template) return;
-
 		const requiredExercises = Array.from(
 			{ length: Number(days) },
 			(_, dayIndex) => {
-				const dayMuscleGroups = template.muscleGroups[dayIndex] || [];
-				return dayMuscleGroups.map((group) => `${dayIndex}-${group}`);
+				const dayMuscleGroups = muscleGroupsByDay[dayIndex] || [];
+				return dayMuscleGroups.map(
+					(group: MuscleGroup) => `${dayIndex}-${group}`
+				);
 			}
 		).flat();
 
@@ -113,9 +130,11 @@ export default function ExerciseSelection() {
 			return;
 		}
 
-		// Create mesocycle
+		// Create mesocycle with either custom or template name
 		const mesocycleTemplate: MesocycleTemplate = {
-			name: template.name,
+			name: template?.isCustom
+				? 'Custom Program'
+				: template?.name || 'Workout Program',
 			weeks: Number(weeks),
 			days: Number(days),
 			exercises: selectedExercises,
@@ -150,7 +169,7 @@ export default function ExerciseSelection() {
 			</ScrollView>
 
 			<ScrollView className={'flex-1 p-4'}>
-				{muscleGroups.map((muscleGroup) => {
+				{muscleGroups.map((muscleGroup: MuscleGroup) => {
 					const key = `${activeDay}-${muscleGroup}`;
 					const exerciseId = selectedExercises[key];
 					const exercise = EXERCISES.find((e) => e.id === exerciseId);
