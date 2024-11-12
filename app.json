@@ -31,6 +31,15 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "5185740d-df89-4e6c-825d-61e1e187f5f0"
+      }
+    },
+    "owner": "mazzone"
   }
 }
