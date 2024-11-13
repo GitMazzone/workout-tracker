@@ -51,6 +51,12 @@ export interface WorkoutState {
 	navigateWorkout: (direction: 'next' | 'prev') => void;
 	setCurrentWorkout: (id: string) => void;
 	skipWorkout: (workoutId: string) => void;
+	// EXERCISES
+	replaceExercise: (
+		workoutId: string,
+		oldExerciseId: string,
+		newExerciseId: string
+	) => void;
 	// SETS
 	completeSet: (
 		workoutId: string,

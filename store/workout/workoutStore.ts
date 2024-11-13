@@ -20,6 +20,7 @@ import {
 	updateSetWeight,
 	updateSetReps,
 	skipWorkout,
+	replaceExercise,
 } from './actions/workout.actions';
 import { WorkoutState } from './types';
 
@@ -43,6 +44,7 @@ export const useWorkoutStore = create<WorkoutState>()(
 			deleteMesocycle: deleteMesocycle(setState),
 			updateMesocycleName: updateMesocycleName(setState),
 			skipWorkout: skipWorkout(setState),
+			replaceExercise: replaceExercise(setState),
 		}),
 		{
 			name: 'workout-storage',

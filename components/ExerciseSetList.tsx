@@ -1,5 +1,5 @@
 import { EXERCISES } from '@/constants/exercises';
-import { useWorkoutStore, WorkoutSet } from '@/store/workout';
+import { replaceExercise, useWorkoutStore, WorkoutSet } from '@/store/workout';
 import {
 	Trash2,
 	Check,
@@ -19,6 +19,7 @@ import {
 } from 'react-native';
 import { useState, useEffect, useRef } from 'react';
 import { Dimensions } from 'react-native';
+import ExercisePickerModal from './ExercisePickerModal';
 
 interface Props {
 	exerciseId: string;
@@ -87,13 +88,11 @@ export const ExerciseSetList = ({
 		);
 	};
 
+	const [isPickerVisible, setIsPickerVisible] = useState(false);
+
 	const handleReplaceExercise = () => {
 		setIsMenuVisible(false);
-		// To be implemented
-		Alert.alert(
-			'Coming soon',
-			'Exercise replacement will be available in a future update'
-		);
+		setIsPickerVisible(true);
 	};
 
 	useEffect(() => {
@@ -174,6 +173,18 @@ export const ExerciseSetList = ({
 					</View>
 				</TouchableOpacity>
 			</Modal>
+
+			<ExercisePickerModal
+				visible={isPickerVisible}
+				onClose={() => setIsPickerVisible(false)}
+				muscleGroup={exercise?.muscleGroups[0] || 'chest'}
+				onSelectExercise={(newExerciseId) => {
+					useWorkoutStore
+						.getState()
+						.replaceExercise(workoutId, exerciseId, newExerciseId);
+					setIsPickerVisible(false);
+				}}
+			/>
 
 			{sets.map((set, idx) => {
 				const isLastSet = idx === sets.length - 1;

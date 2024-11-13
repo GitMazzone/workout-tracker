@@ -96,3 +96,32 @@ export const skipWorkout = (setState: any) => (workoutId: string) => {
 		})),
 	}));
 };
+
+export const replaceExercise =
+	(setState: any) =>
+	(workoutId: string, oldExerciseId: string, newExerciseId: string) => {
+		setState((state: WorkoutState) => ({
+			...state,
+			mesocycles: state.mesocycles.map((meso) => ({
+				...meso,
+				workouts: meso.workouts.map((workout) => {
+					if (workout.id !== workoutId) return workout;
+					return {
+						...workout,
+						sets: workout.sets.map((set) =>
+							set.exerciseId === oldExerciseId
+								? {
+										...set,
+										exerciseId: newExerciseId,
+										weight: 0,
+										completedWeight: undefined,
+										completedReps: undefined,
+										completed: false,
+								  }
+								: set
+						),
+					};
+				}),
+			})),
+		}));
+	};
