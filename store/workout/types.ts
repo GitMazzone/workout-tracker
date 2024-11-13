@@ -8,6 +8,7 @@ export interface WorkoutSet {
 	completedReps?: number;
 	completedWeight?: number;
 	skipped?: boolean;
+	isDeload?: boolean;
 }
 
 export interface WorkoutDay {

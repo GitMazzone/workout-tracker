@@ -1,4 +1,11 @@
-import { View, Text, TouchableOpacity, Modal, Alert } from 'react-native';
+import {
+	View,
+	Text,
+	TouchableOpacity,
+	Modal,
+	Alert,
+	TouchableWithoutFeedback,
+} from 'react-native';
 import { Download, Upload, X } from 'lucide-react-native';
 import { useWorkoutStore } from '@/store/workout';
 import * as DocumentPicker from 'expo-document-picker';
@@ -139,39 +146,41 @@ export const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
 			visible={isOpen}
 			onRequestClose={onClose}
 		>
-			<View className={'flex-1 justify-end'}>
-				<View className={'bg-black/50 absolute inset-0'} />
-				<View className={'bg-white rounded-t-xl'}>
-					<View
-						className={
-							'flex-row justify-between items-center p-4 border-b border-t-2 border-gray-200'
-						}
-					>
-						<Text className={'text-xl font-semibold'}>Settings</Text>
-						<TouchableOpacity onPress={onClose} className={'p-2'}>
-							<X size={24} color={'#666666'} />
-						</TouchableOpacity>
-					</View>
-
-					<View className={'p-4 pb-14 gap-2'}>
-						<TouchableOpacity
-							className={'flex-row items-center p-4 bg-gray-50 rounded-lg'}
-							onPress={handleExportData}
+			<TouchableWithoutFeedback onPress={onClose}>
+				<View className={'flex-1 justify-end'}>
+					<View className={'bg-black/50 absolute inset-0'} />
+					<View className={'bg-white rounded-t-xl'}>
+						<View
+							className={
+								'flex-row justify-between items-center p-4 border-b border-t-2 border-gray-200'
+							}
 						>
-							<Download size={20} color={'#0284c7'} />
-							<Text className={'ml-3 text-base'}>Export your data</Text>
-						</TouchableOpacity>
+							<Text className={'text-xl font-semibold'}>Settings</Text>
+							<TouchableOpacity onPress={onClose} className={'p-2'}>
+								<X size={24} color={'#666666'} />
+							</TouchableOpacity>
+						</View>
 
-						<TouchableOpacity
-							className={'flex-row items-center p-4 bg-gray-50 rounded-lg'}
-							onPress={handleImportData}
-						>
-							<Upload size={20} color={'#0284c7'} />
-							<Text className={'ml-3 text-base'}>Import data</Text>
-						</TouchableOpacity>
+						<View className={'p-4 pb-14 gap-2'}>
+							<TouchableOpacity
+								className={'flex-row items-center p-4 bg-gray-50 rounded-lg'}
+								onPress={handleExportData}
+							>
+								<Download size={20} color={'#0284c7'} />
+								<Text className={'ml-3 text-base'}>Export your data</Text>
+							</TouchableOpacity>
+
+							<TouchableOpacity
+								className={'flex-row items-center p-4 bg-gray-50 rounded-lg'}
+								onPress={handleImportData}
+							>
+								<Upload size={20} color={'#0284c7'} />
+								<Text className={'ml-3 text-base'}>Import data</Text>
+							</TouchableOpacity>
+						</View>
 					</View>
 				</View>
-			</View>
+			</TouchableWithoutFeedback>
 		</Modal>
 	);
 };

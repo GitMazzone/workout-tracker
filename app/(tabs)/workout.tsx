@@ -15,13 +15,8 @@ const getExerciseMuscleGroup = (exerciseId: string): MuscleGroup | null => {
 
 export default function WorkoutScreen() {
 	const [calendarVisible, setCalendarVisible] = useState(false);
-	const {
-		mesocycles,
-		activeMesocycle,
-		currentWorkoutId,
-		setCurrentWorkout,
-		navigateWorkout,
-	} = useWorkoutStore();
+	const { mesocycles, activeMesocycle, currentWorkoutId, setCurrentWorkout } =
+		useWorkoutStore();
 
 	const currentMeso = mesocycles.find((m) => m.id === activeMesocycle);
 
@@ -97,25 +92,9 @@ export default function WorkoutScreen() {
 						<View className={'flex-row gap-2'}>
 							<TouchableOpacity
 								className={'p-2 rounded-lg bg-gray-100'}
-								onPress={() => navigateWorkout('prev')}
-								disabled={isFirst}
-								style={isFirst ? { opacity: 0.5 } : undefined}
-							>
-								<ChevronLeft size={24} color={'#4B5563'} />
-							</TouchableOpacity>
-							<TouchableOpacity
-								className={'p-2 rounded-lg bg-gray-100'}
 								onPress={() => setCalendarVisible(true)}
 							>
 								<Calendar size={24} color={'#4B5563'} />
-							</TouchableOpacity>
-							<TouchableOpacity
-								className={'p-2 rounded-lg bg-gray-100'}
-								onPress={() => navigateWorkout('next')}
-								disabled={isLast}
-								style={isLast ? { opacity: 0.5 } : undefined}
-							>
-								<ChevronRight size={24} color={'#4B5563'} />
 							</TouchableOpacity>
 						</View>
 					</View>

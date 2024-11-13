@@ -51,6 +51,7 @@ export const ExerciseSetList = ({
 			{sets.map((set, idx) => {
 				const isLastSet = idx === sets.length - 1;
 				const inputKey = `${exerciseId}-${idx}`;
+				const isDeload = set.isDeload;
 
 				return (
 					<View key={inputKey} className={'flex-row items-center mb-3 gap-2'}>
@@ -65,13 +66,16 @@ export const ExerciseSetList = ({
 							<View className={'w-10'} />
 						)}
 
-						<Text className={'w-8 font-medium'}>{idx + 1}</Text>
+						<Text className={'w-8 font-medium text-gray-700'}>{idx + 1}</Text>
 
 						<TextInput
-							className={'flex-1 p-3 bg-gray-50 rounded-lg text-base'}
+							className={`flex-1 p-3 rounded-lg text-base ${
+								isDeload ? 'bg-blue-50' : 'bg-gray-100'
+							}`}
 							keyboardType='numeric'
 							returnKeyType='done'
 							placeholder='Weight'
+							placeholderTextColor='#6B7280'
 							value={inputValues[inputKey]?.weight || ''}
 							onChangeText={(text) => {
 								setInputValues((prev) => ({
@@ -86,10 +90,13 @@ export const ExerciseSetList = ({
 						/>
 
 						<TextInput
-							className={'flex-1 p-3 bg-gray-50 rounded-lg text-base'}
+							className={`flex-1 p-3 rounded-lg text-base ${
+								isDeload ? 'bg-blue-50' : 'bg-gray-100'
+							}`}
 							keyboardType='numeric'
 							returnKeyType='done'
 							placeholder='Reps'
+							placeholderTextColor='#6B7280'
 							value={inputValues[inputKey]?.reps || ''}
 							onChangeText={(text) => {
 								setInputValues((prev) => ({
@@ -132,9 +139,11 @@ export const ExerciseSetList = ({
 
 			<TouchableOpacity
 				onPress={() => addSet(workoutId, exerciseId)}
-				className={'flex-row items-center justify-center p-2 mt-2'}
+				className={
+					'flex-row items-center justify-center p-2 mt-2 w-6 h-6 mx-auto'
+				}
 			>
-				<Plus size={24} color='#22C55E' />
+				<Plus size={24} color={'#22C55E'} />
 			</TouchableOpacity>
 		</View>
 	);

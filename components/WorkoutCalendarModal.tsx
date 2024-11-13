@@ -74,21 +74,17 @@ export function WorkoutCalendarModal({
 				<View className={'flex-1 justify-end bg-black/50 rounded-none'}>
 					<View
 						style={{
-							backgroundColor: 'white',
-							borderTopLeftRadius: 15,
-							borderTopRightRadius: 15,
 							maxHeight: Dimensions.get('window').height * 0.8,
 							paddingBottom: insets.bottom,
 						}}
+						className={'bg-white border-t-2 border-gray-200'}
 					>
 						<View
 							className={
 								'flex-row justify-between items-center p-4 border-b border-gray-200'
 							}
 						>
-							<Text className={'text-xl font-semibold'}>
-								Mesocycle | {mesocycle.name}
-							</Text>
+							<Text className={'text-xl font-light'}>Mesocycle Calendar</Text>
 							<TouchableOpacity onPress={onClose}>
 								<X size={24} color='#000' />
 							</TouchableOpacity>
