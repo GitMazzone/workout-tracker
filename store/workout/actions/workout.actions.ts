@@ -71,3 +71,28 @@ export const navigateWorkout =
 			};
 		});
 	};
+
+export const skipWorkout = (setState: any) => (workoutId: string) => {
+	setState((state: WorkoutState) => ({
+		...state,
+		mesocycles: state.mesocycles.map((meso) => ({
+			...meso,
+			workouts: meso.workouts.map((workout) => {
+				if (workout.id !== workoutId) return workout;
+				return {
+					...workout,
+					sets: workout.sets.map((set) =>
+						set.completed
+							? set
+							: {
+									// Keep completed sets as-is
+									...set,
+									completed: true,
+									skipped: true,
+							  }
+					),
+				};
+			}),
+		})),
+	}));
+};

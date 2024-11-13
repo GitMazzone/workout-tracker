@@ -39,15 +39,19 @@ export interface MesocycleTemplate {
 }
 
 export interface WorkoutState {
+	// MESOCYCLES
 	mesocycles: Mesocycle[];
 	activeMesocycle: string | null;
-	currentWorkoutId: string | null;
 	createMesocycle: (template: MesocycleTemplate) => void;
 	deleteMesocycle: (id: string) => void;
 	updateMesocycleName: (id: string, name: string) => void;
 	setActiveMesocycle: (id: string) => void;
-	setCurrentWorkout: (id: string) => void;
+	// WORKOUTS
+	currentWorkoutId: string | null;
 	navigateWorkout: (direction: 'next' | 'prev') => void;
+	setCurrentWorkout: (id: string) => void;
+	skipWorkout: (workoutId: string) => void;
+	// SETS
 	completeSet: (
 		workoutId: string,
 		exercideId: string,

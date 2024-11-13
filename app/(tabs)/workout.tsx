@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useWorkoutStore, WorkoutSet } from '@/store/workout';
 import { EXERCISES } from '@/constants/exercises';
@@ -8,6 +8,7 @@ import { ExerciseSetList } from '@/components/ExerciseSetList';
 import { WorkoutCalendarModal } from '@/components/WorkoutCalendarModal';
 import { useState, useEffect, useRef } from 'react';
 import { RestTimer, RestTimerRef } from '@/components/RestTimer';
+import Toast from 'react-native-toast-message';
 
 const getExerciseMuscleGroup = (exerciseId: string): MuscleGroup | null => {
 	const exercise = EXERCISES.find((e) => e.id === exerciseId);
@@ -24,7 +25,12 @@ export default function WorkoutScreen() {
 	const timerRef = useRef<RestTimerRef>(null);
 
 	useEffect(() => {
-		if (currentMeso && !currentWorkoutId) {
+		if (
+			currentMeso &&
+			(!currentWorkoutId ||
+				!currentMeso.workouts.find((w) => w.id === currentWorkoutId))
+		) {
+			// If no current workout OR current workout ID isn't found in this meso
 			const nextIncomplete = currentMeso.workouts.find((w) =>
 				w.sets.some((s) => !s.completed)
 			);
@@ -87,6 +93,33 @@ export default function WorkoutScreen() {
 					>
 						<Text className={'text-2xl font-bold'}>{currentMeso.name}</Text>
 						<View className={'flex-row gap-2'}>
+							<TouchableOpacity
+								className={
+									'p-2 rounded-lg bg-gray-100 flex items-center justify-center'
+								}
+								onPress={() => {
+									Alert.alert(
+										'Skip Workout',
+										'Are you sure you want to skip this workout? \nThis will mark all sets as completed and skipped.',
+										[
+											{ text: 'Cancel', style: 'cancel' },
+											{
+												text: 'Skip workout',
+												style: 'destructive',
+												onPress: () => {
+													useWorkoutStore.getState().skipWorkout(workout.id);
+													Toast.show({
+														type: 'success',
+														text1: 'Workout skipped',
+													});
+												},
+											},
+										]
+									);
+								}}
+							>
+								<Text className={'text-gray-600'}>Skip workout</Text>
+							</TouchableOpacity>
 							<TouchableOpacity
 								className={'p-2 rounded-lg bg-gray-100'}
 								onPress={() => setCalendarVisible(true)}

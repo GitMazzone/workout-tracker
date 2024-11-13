@@ -7,7 +7,7 @@ import {
 	Dimensions,
 	TouchableWithoutFeedback,
 } from 'react-native';
-import { X, CheckCircle, Circle } from 'lucide-react-native';
+import { X, CheckCircle, Circle, XCircle } from 'lucide-react-native';
 import { Mesocycle } from '@/store/workout';
 import { useMemo } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -36,6 +36,7 @@ export function WorkoutCalendarModal({
 				completedSets: number;
 				totalSets: number;
 				dayNumber: number;
+				skipped: boolean;
 			}>
 		> = [];
 
@@ -52,6 +53,7 @@ export function WorkoutCalendarModal({
 			const allCompleted = workout.sets.every((set) => set.completed);
 			const anyCompleted = workout.sets.some((set) => set.completed);
 			const completedSets = workout.sets.filter((set) => set.completed).length;
+			const allSkipped = workout.sets.every((set) => set.skipped);
 
 			weeks[weekIndex].push({
 				id: workout.id,
@@ -60,6 +62,7 @@ export function WorkoutCalendarModal({
 				completedSets,
 				totalSets: workout.sets.length,
 				dayNumber,
+				skipped: allSkipped,
 			});
 		});
 
@@ -117,6 +120,8 @@ export function WorkoutCalendarModal({
 												className={`mr-3 p-4 rounded-lg border w-32 ${
 													workout.id === currentWorkoutId
 														? 'border-2 border-sky-500 bg-sky-50'
+														: workout.skipped
+														? 'border-gray-400'
 														: workout.completed
 														? 'border-green-500'
 														: 'border-gray-200'
@@ -134,7 +139,9 @@ export function WorkoutCalendarModal({
 													>
 														Day {workout.dayNumber}
 													</Text>
-													{workout.completed ? (
+													{workout.skipped ? (
+														<XCircle size={20} color='#9CA3AF' />
+													) : workout.completed ? (
 														<CheckCircle size={20} color='#22C55E' />
 													) : (
 														<Circle

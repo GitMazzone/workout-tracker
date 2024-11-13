@@ -1,8 +1,24 @@
 import { EXERCISES } from '@/constants/exercises';
 import { useWorkoutStore, WorkoutSet } from '@/store/workout';
-import { Trash2, Check, Plus } from 'lucide-react-native';
-import { View, TouchableOpacity, TextInput, Text } from 'react-native';
-import { useState, useEffect } from 'react';
+import {
+	Trash2,
+	Check,
+	Plus,
+	MoreVertical,
+	XCircle,
+	Replace,
+	X,
+} from 'lucide-react-native';
+import {
+	View,
+	TouchableOpacity,
+	TextInput,
+	Text,
+	Alert,
+	Modal,
+} from 'react-native';
+import { useState, useEffect, useRef } from 'react';
+import { Dimensions } from 'react-native';
 
 interface Props {
 	exerciseId: string;
@@ -25,10 +41,60 @@ export const ExerciseSetList = ({
 		updateSetWeight,
 		updateSetReps,
 	} = useWorkoutStore();
+
+	const [isMenuVisible, setIsMenuVisible] = useState(false);
+	const [menuPosition, setMenuPosition] = useState({ top: 0, right: 0 });
+	const buttonRef = useRef<TouchableOpacity>(null);
 	const exercise = EXERCISES.find((e) => e.id === exerciseId);
 	const [inputValues, setInputValues] = useState<{
 		[key: string]: { weight: string; reps: string };
 	}>({});
+
+	const handleMenuPress = () => {
+		buttonRef.current?.measureInWindow((x, y, width, height) => {
+			setMenuPosition({
+				top: y + height,
+				right: Dimensions.get('window').width - (x + width),
+			});
+			setIsMenuVisible(true);
+		});
+	};
+
+	const handleSkipIncomplete = () => {
+		Alert.alert(
+			'Skip Incomplete Sets',
+			'Are you sure you want to skip all incomplete sets for this exercise?',
+			[
+				{ text: 'Cancel', style: 'cancel' },
+				{
+					text: 'Skip',
+					style: 'destructive',
+					onPress: () => {
+						sets.forEach((set, index) => {
+							if (!set.completed) {
+								completeSet(workoutId, exerciseId, index, 0, 0);
+								const key = `${exerciseId}-${index}`;
+								setInputValues((prev) => ({
+									...prev,
+									[key]: { weight: '0', reps: '0' },
+								}));
+							}
+						});
+						setIsMenuVisible(false);
+					},
+				},
+			]
+		);
+	};
+
+	const handleReplaceExercise = () => {
+		setIsMenuVisible(false);
+		// To be implemented
+		Alert.alert(
+			'Coming soon',
+			'Exercise replacement will be available in a future update'
+		);
+	};
 
 	useEffect(() => {
 		const newValues: { [key: string]: { weight: string; reps: string } } = {};
@@ -59,7 +125,55 @@ export const ExerciseSetList = ({
 
 	return (
 		<View className={'p-4 border-b-2 border-gray-100'}>
-			<Text className={'text-lg mb-2'}>{exercise.name}</Text>
+			<View className={'flex-row justify-between items-center mb-2'}>
+				<Text className={'text-lg'}>{exercise.name}</Text>
+				<TouchableOpacity
+					ref={buttonRef}
+					onPress={handleMenuPress}
+					className={'p-2'}
+				>
+					<MoreVertical size={20} color={'#666666'} />
+				</TouchableOpacity>
+			</View>
+
+			{/* Exercise Menu Modal */}
+			<Modal
+				transparent
+				visible={isMenuVisible}
+				animationType={'fade'}
+				onRequestClose={() => setIsMenuVisible(false)}
+			>
+				<TouchableOpacity
+					className={'flex-1'}
+					onPress={() => setIsMenuVisible(false)}
+					activeOpacity={1}
+				>
+					<View
+						className={
+							'absolute bg-white rounded-lg shadow-lg border border-gray-200 py-1'
+						}
+						style={{
+							top: menuPosition.top + 4,
+							right: menuPosition.right,
+						}}
+					>
+						<TouchableOpacity
+							className={'flex-row items-center px-4 py-3'}
+							onPress={handleSkipIncomplete}
+						>
+							<XCircle size={18} color={'#ef4444'} />
+							<Text className={'ml-2 text-base'}>Skip Incomplete Sets</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+							className={'flex-row items-center px-4 py-3'}
+							onPress={handleReplaceExercise}
+						>
+							<Replace size={18} color={'#0284c7'} />
+							<Text className={'ml-2 text-base'}>Replace Exercise</Text>
+						</TouchableOpacity>
+					</View>
+				</TouchableOpacity>
+			</Modal>
 
 			{sets.map((set, idx) => {
 				const isLastSet = idx === sets.length - 1;
@@ -134,11 +248,18 @@ export const ExerciseSetList = ({
 							<View
 								className={`w-6 h-6 rounded border-2 ${
 									set.completed
-										? 'bg-green-500 border-green-500'
+										? set.skipped
+											? 'bg-gray-300 border-gray-300'
+											: 'bg-green-500 border-green-500'
 										: 'border-gray-300'
 								} justify-center items-center`}
 							>
-								{set.completed && <Check size={16} color='#fff' />}
+								{set.completed &&
+									(set.skipped ? (
+										<X size={16} color='#fff' />
+									) : (
+										<Check size={16} color='#fff' />
+									))}
 							</View>
 						</TouchableOpacity>
 					</View>

@@ -37,6 +37,7 @@ export const completeSet =
 						completed: true,
 						completedWeight: weight,
 						completedReps: reps,
+						skipped: weight === 0 && reps === 0,
 					};
 
 					return { ...workout, sets: newSets };
