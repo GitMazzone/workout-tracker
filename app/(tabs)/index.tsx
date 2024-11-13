@@ -1,8 +1,8 @@
-import { View, Text, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { useWorkoutStore } from '@/store/workout';
-import { Settings } from 'lucide-react-native';
+import { Settings, CheckCircle2, Circle } from 'lucide-react-native';
 import { useState } from 'react';
 import { SettingsModal } from '@/components/SettingsModal';
 import { MesoMenu } from '@/components/MesoMenu';
@@ -64,33 +64,67 @@ export default function Home() {
 				</View>
 
 				<ScrollView className={'flex-1 p-4'}>
-					{mesocycles.map((meso) => (
-						<View
-							key={meso.id}
-							className={
-								'bg-white border border-gray-200 rounded-lg mb-4 shadow-sm'
-							}
-						>
-							<TouchableOpacity
-								className={'flex-1 p-4'}
-								onPress={() => {
-									setActiveMesocycle(meso.id);
-									router.push('/(tabs)/workout');
-								}}
+					{mesocycles.map((meso) => {
+						const isCompleted = meso.workouts.every((w) =>
+							w.sets.every((s) => s.completed)
+						);
+						const hasStarted = meso.workouts.some((w) =>
+							w.sets.some((s) => s.completed)
+						);
+
+						return (
+							<View
+								key={meso.id}
+								className={
+									'bg-white border border-gray-200 rounded-lg mb-4 shadow-sm'
+								}
 							>
-								<View className={'flex-row justify-between items-start'}>
-									<View className={'flex-1 mr-2'}>
-										<Text className={'text-lg font-semibold'}>{meso.name}</Text>
-										<Text className={'text-gray-600'}>
-											{meso.weeks} weeks • {Object.keys(meso.template).length}{' '}
-											workouts/week
-										</Text>
+								<TouchableOpacity
+									className={'flex-1 p-4'}
+									onPress={() => {
+										setActiveMesocycle(meso.id);
+										router.push('/(tabs)/workout');
+									}}
+								>
+									<View className={'flex-row justify-between items-start'}>
+										<View className={'flex-1 mr-2'}>
+											<View className={'flex-row items-center gap-2 mb-1'}>
+												<Text className={'text-lg font-semibold'}>
+													{meso.name}
+												</Text>
+												{isCompleted ? (
+													<View
+														className={'bg-green-100 px-2 py-0.5 rounded-full'}
+													>
+														<Text
+															className={'text-green-700 text-xs font-medium'}
+														>
+															complete
+														</Text>
+													</View>
+												) : hasStarted ? (
+													<View
+														className={'bg-amber-100 px-2 py-0.5 rounded-full'}
+													>
+														<Text
+															className={'text-amber-700 text-xs font-medium'}
+														>
+															in progress
+														</Text>
+													</View>
+												) : null}
+											</View>
+											<Text className={'text-gray-600'}>
+												{meso.weeks} weeks • {Object.keys(meso.template).length}{' '}
+												workouts/week
+											</Text>
+										</View>
+										<MesoMenu mesoId={meso.id} mesoName={meso.name} />
 									</View>
-									<MesoMenu mesoId={meso.id} mesoName={meso.name} />
-								</View>
-							</TouchableOpacity>
-						</View>
-					))}
+								</TouchableOpacity>
+							</View>
+						);
+					})}
 				</ScrollView>
 
 				<View className={'p-4'}>
