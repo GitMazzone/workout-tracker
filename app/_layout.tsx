@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import 'react-native-reanimated';
 import Toast from 'react-native-toast-message';
+import { initCrashReporting, initTelemetry } from '@/telemetry';
 
 export { ErrorBoundary } from 'expo-router';
 
@@ -20,6 +21,11 @@ export default function RootLayout() {
 		SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
 		...FontAwesome.font,
 	});
+
+	useEffect(() => {
+		initTelemetry();
+		initCrashReporting();
+	}, []);
 
 	useEffect(() => {
 		if (error) throw error;
