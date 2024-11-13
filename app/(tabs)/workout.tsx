@@ -6,6 +6,7 @@ import { MuscleGroup } from '@/store/types';
 import { Calendar } from 'lucide-react-native';
 import { ExerciseSetList } from '@/components/ExerciseSetList';
 import { WorkoutCalendarModal } from '@/components/WorkoutCalendarModal';
+import { WorkoutCompleteModal } from '@/components/WorkoutCompleteModal';
 import { useState, useEffect, useRef } from 'react';
 import { RestTimer, RestTimerRef } from '@/components/RestTimer';
 import Toast from 'react-native-toast-message';
@@ -17,11 +18,16 @@ const getExerciseMuscleGroup = (exerciseId: string): MuscleGroup | null => {
 
 export default function WorkoutScreen() {
 	const [calendarVisible, setCalendarVisible] = useState(false);
-	const { mesocycles, activeMesocycle, currentWorkoutId, setCurrentWorkout } =
-		useWorkoutStore();
+	const [completionVisible, setCompletionVisible] = useState(false);
+	const {
+		mesocycles,
+		activeMesocycle,
+		currentWorkoutId,
+		setCurrentWorkout,
+		navigateWorkout,
+	} = useWorkoutStore();
 
 	const currentMeso = mesocycles.find((m) => m.id === activeMesocycle);
-
 	const timerRef = useRef<RestTimerRef>(null);
 
 	useEffect(() => {
@@ -30,7 +36,6 @@ export default function WorkoutScreen() {
 			(!currentWorkoutId ||
 				!currentMeso.workouts.find((w) => w.id === currentWorkoutId))
 		) {
-			// If no current workout OR current workout ID isn't found in this meso
 			const nextIncomplete = currentMeso.workouts.find((w) =>
 				w.sets.some((s) => !s.completed)
 			);
@@ -41,6 +46,31 @@ export default function WorkoutScreen() {
 			}
 		}
 	}, [currentMeso, currentWorkoutId]);
+
+	// Check for workout completion after every set
+	useEffect(() => {
+		if (currentMeso && currentWorkoutId) {
+			const workout = currentMeso.workouts.find(
+				(w) => w.id === currentWorkoutId
+			);
+			if (workout && workout.sets.every((s) => s.completed)) {
+				setCompletionVisible(true);
+			}
+		}
+	}, [currentMeso, currentWorkoutId]);
+
+	const handleNextWorkout = () => {
+		navigateWorkout('next');
+		setCompletionVisible(false);
+	};
+
+	const handleViewStats = () => {
+		Toast.show({
+			type: 'info',
+			text1: 'Coming soon',
+			text2: 'Program stats will be available in a future update',
+		});
+	};
 
 	if (!currentMeso) {
 		return (
@@ -108,10 +138,6 @@ export default function WorkoutScreen() {
 												style: 'destructive',
 												onPress: () => {
 													useWorkoutStore.getState().skipWorkout(workout.id);
-													Toast.show({
-														type: 'success',
-														text1: 'Workout skipped',
-													});
 												},
 											},
 										]
@@ -128,17 +154,6 @@ export default function WorkoutScreen() {
 							</TouchableOpacity>
 						</View>
 					</View>
-
-					<WorkoutCalendarModal
-						visible={calendarVisible}
-						onClose={() => setCalendarVisible(false)}
-						mesocycle={currentMeso}
-						currentWorkoutId={workout.id}
-						onSelectWorkout={(workoutId) => {
-							setCurrentWorkout(workoutId);
-							setCalendarVisible(false);
-						}}
-					/>
 
 					{Object.entries(exerciseGroups).map(([muscleGroup, exercises]) => (
 						<View key={muscleGroup} className={'mb-6'}>
@@ -174,6 +189,13 @@ export default function WorkoutScreen() {
 						setCurrentWorkout(workoutId);
 						setCalendarVisible(false);
 					}}
+				/>
+
+				<WorkoutCompleteModal
+					visible={completionVisible}
+					workout={workout}
+					onNext={handleNextWorkout}
+					onViewStats={handleViewStats}
 				/>
 			</View>
 		</SafeAreaView>
