@@ -31,7 +31,10 @@ export default function TemplateDetail() {
 				}}
 			/>
 			<ScrollView className={'flex-1 p-4'}>
-				<Text className={'text-lg font-semibold mb-4'}>Number of Weeks</Text>
+				<Text className={'text-lg font-semibold'}>Number of Weeks</Text>
+				<Text className={'text-sm text-gray-600 mb-4'}>
+					{selectedWeeks - 1} training weeks plus 1 deload week
+				</Text>
 				<View className={'flex-row mb-6'}>
 					{WEEKS_OPTIONS.map((weeks) => (
 						<TouchableOpacity

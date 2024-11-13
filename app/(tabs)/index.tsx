@@ -13,7 +13,7 @@ export default function Home() {
 
 	if (mesocycles.length === 0) {
 		return (
-			<SafeAreaView className={'flex-1'}>
+			<SafeAreaView className={'flex-1'} edges={['top']}>
 				<View className={'flex-1 p-4 bg-white relative'}>
 					<TouchableOpacity
 						className={'absolute top-4 right-4 p-2 z-10'}
@@ -47,7 +47,7 @@ export default function Home() {
 	}
 
 	return (
-		<SafeAreaView className={'flex-1'}>
+		<SafeAreaView className={'flex-1'} edges={['top']}>
 			<View className={'flex-1 bg-white'}>
 				<View
 					className={
@@ -93,9 +93,9 @@ export default function Home() {
 					))}
 				</ScrollView>
 
-				<View className={'p-4 border-t border-gray-200'}>
+				<View className={'p-4'}>
 					<TouchableOpacity
-						className={'bg-sky-600 px-6 py-3 rounded-lg'}
+						className={'bg-sky-600 px-6 py-4 rounded-lg'}
 						onPress={() => router.push('/templates')}
 					>
 						<Text className={'text-white text-base font-semibold text-center'}>

@@ -5,9 +5,11 @@ import {
 	Modal,
 	Alert,
 	TouchableWithoutFeedback,
+	Switch,
 } from 'react-native';
 import { Download, Upload, X } from 'lucide-react-native';
 import { useWorkoutStore } from '@/store/workout';
+import { useTimerSettings } from '@/store/timerSettings';
 import * as DocumentPicker from 'expo-document-picker';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
@@ -21,6 +23,8 @@ interface SettingsModalProps {
 }
 
 export const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
+	const { isEnabled, setEnabled } = useTimerSettings();
+
 	const handleExportData = async () => {
 		try {
 			const mesocycles = useWorkoutStore.getState().mesocycles;
@@ -34,7 +38,9 @@ export const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
 			await FileSystem.writeAsStringAsync(
 				fileUri,
 				JSON.stringify(exportData, null, 2),
-				{ encoding: FileSystem.EncodingType.UTF8 }
+				{
+					encoding: FileSystem.EncodingType.UTF8,
+				}
 			);
 
 			const canShare = await Sharing.isAvailableAsync();
@@ -161,22 +167,31 @@ export const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
 							</TouchableOpacity>
 						</View>
 
-						<View className={'p-4 pb-14 gap-2'}>
-							<TouchableOpacity
-								className={'flex-row items-center p-4 bg-gray-50 rounded-lg'}
-								onPress={handleExportData}
-							>
-								<Download size={20} color={'#0284c7'} />
-								<Text className={'ml-3 text-base'}>Export your data</Text>
-							</TouchableOpacity>
+						<View className={'p-4 pb-14'}>
+							<View className={''}>
+								<View className={'flex-row justify-between items-center mb-4'}>
+									<Text className={'text-base'}>Enable Rest Timer</Text>
+									<Switch value={isEnabled} onValueChange={setEnabled} />
+								</View>
+							</View>
 
-							<TouchableOpacity
-								className={'flex-row items-center p-4 bg-gray-50 rounded-lg'}
-								onPress={handleImportData}
-							>
-								<Upload size={20} color={'#0284c7'} />
-								<Text className={'ml-3 text-base'}>Import data</Text>
-							</TouchableOpacity>
+							<View className={'space-y-2'}>
+								<TouchableOpacity
+									className={'flex-row items-center p-4 bg-gray-50 rounded-lg'}
+									onPress={handleExportData}
+								>
+									<Download size={20} color={'#0284c7'} />
+									<Text className={'ml-3 text-base'}>Export your data</Text>
+								</TouchableOpacity>
+
+								<TouchableOpacity
+									className={'flex-row items-center p-4 bg-gray-50 rounded-lg'}
+									onPress={handleImportData}
+								>
+									<Upload size={20} color={'#0284c7'} />
+									<Text className={'ml-3 text-base'}>Import data</Text>
+								</TouchableOpacity>
+							</View>
 						</View>
 					</View>
 				</View>

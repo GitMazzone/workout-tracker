@@ -4,15 +4,19 @@ import { Trash2, Check, Plus } from 'lucide-react-native';
 import { View, TouchableOpacity, TextInput, Text } from 'react-native';
 import { useState, useEffect } from 'react';
 
+interface Props {
+	exerciseId: string;
+	sets: WorkoutSet[];
+	workoutId: string;
+	onSetComplete?: () => void;
+}
+
 export const ExerciseSetList = ({
 	exerciseId,
 	sets,
 	workoutId,
-}: {
-	exerciseId: string;
-	sets: WorkoutSet[];
-	workoutId: string;
-}) => {
+	onSetComplete,
+}: Props) => {
 	const {
 		completeSet,
 		deleteSet,
@@ -44,6 +48,15 @@ export const ExerciseSetList = ({
 
 	if (!exercise) return null;
 
+	const handleSetComplete = (
+		setIndex: number,
+		weight: number,
+		reps: number
+	) => {
+		completeSet(workoutId, exerciseId, setIndex, weight, reps);
+		onSetComplete?.();
+	};
+
 	return (
 		<View className={'p-4 border-b-2 border-gray-100'}>
 			<Text className={'text-lg mb-2'}>{exercise.name}</Text>
@@ -51,7 +64,6 @@ export const ExerciseSetList = ({
 			{sets.map((set, idx) => {
 				const isLastSet = idx === sets.length - 1;
 				const inputKey = `${exerciseId}-${idx}`;
-				const isDeload = set.isDeload;
 
 				return (
 					<View key={inputKey} className={'flex-row items-center mb-3 gap-2'}>
@@ -66,12 +78,10 @@ export const ExerciseSetList = ({
 							<View className={'w-10'} />
 						)}
 
-						<Text className={'w-8 font-medium text-gray-700'}>{idx + 1}</Text>
+						<Text className={'w-8 font-medium'}>{idx + 1}</Text>
 
 						<TextInput
-							className={`flex-1 p-3 rounded-lg text-base ${
-								isDeload ? 'bg-blue-50' : 'bg-gray-100'
-							}`}
+							className={'flex-1 p-3 bg-gray-50 rounded-lg text-base'}
 							keyboardType='numeric'
 							returnKeyType='done'
 							placeholder='Weight'
@@ -90,9 +100,7 @@ export const ExerciseSetList = ({
 						/>
 
 						<TextInput
-							className={`flex-1 p-3 rounded-lg text-base ${
-								isDeload ? 'bg-blue-50' : 'bg-gray-100'
-							}`}
+							className={'flex-1 p-3 bg-gray-50 rounded-lg text-base'}
 							keyboardType='numeric'
 							returnKeyType='done'
 							placeholder='Reps'
@@ -118,7 +126,7 @@ export const ExerciseSetList = ({
 								if (set.completed) {
 									undoSetCompletion(workoutId, exerciseId, idx);
 								} else if (weight && reps) {
-									completeSet(workoutId, exerciseId, idx, weight, reps);
+									handleSetComplete(idx, weight, reps);
 								}
 							}}
 							className={'p-2'}

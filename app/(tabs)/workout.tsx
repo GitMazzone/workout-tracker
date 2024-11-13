@@ -3,10 +3,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useWorkoutStore, WorkoutSet } from '@/store/workout';
 import { EXERCISES } from '@/constants/exercises';
 import { MuscleGroup } from '@/store/types';
-import { Calendar, ChevronLeft, ChevronRight } from 'lucide-react-native';
+import { Calendar } from 'lucide-react-native';
 import { ExerciseSetList } from '@/components/ExerciseSetList';
 import { WorkoutCalendarModal } from '@/components/WorkoutCalendarModal';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { RestTimer, RestTimerRef } from '@/components/RestTimer';
 
 const getExerciseMuscleGroup = (exerciseId: string): MuscleGroup | null => {
 	const exercise = EXERCISES.find((e) => e.id === exerciseId);
@@ -19,6 +20,8 @@ export default function WorkoutScreen() {
 		useWorkoutStore();
 
 	const currentMeso = mesocycles.find((m) => m.id === activeMesocycle);
+
+	const timerRef = useRef<RestTimerRef>(null);
 
 	useEffect(() => {
 		if (currentMeso && !currentWorkoutId) {
@@ -35,7 +38,7 @@ export default function WorkoutScreen() {
 
 	if (!currentMeso) {
 		return (
-			<SafeAreaView className={'flex-1'}>
+			<SafeAreaView className={'flex-1'} edges={['top']}>
 				<View className={'flex-1 bg-white p-4 justify-center items-center'}>
 					<Text className={'text-lg text-gray-600 text-center'}>
 						No active mesocycle.{'\n'}Create one to start working out!
@@ -49,7 +52,7 @@ export default function WorkoutScreen() {
 
 	if (!workout) {
 		return (
-			<SafeAreaView className={'flex-1'}>
+			<SafeAreaView className={'flex-1'} edges={['top']}>
 				<View className={'flex-1 bg-white p-4 justify-center items-center'}>
 					<Text className={'text-lg text-gray-600 text-center'}>
 						No workout selected
@@ -58,12 +61,6 @@ export default function WorkoutScreen() {
 			</SafeAreaView>
 		);
 	}
-
-	const workoutIndex = currentMeso.workouts.findIndex(
-		(w) => w.id === workout.id
-	);
-	const isFirst = workoutIndex === 0;
-	const isLast = workoutIndex === currentMeso.workouts.length - 1;
 
 	const exerciseGroups = workout.sets.reduce((groups, set) => {
 		const muscleGroup = getExerciseMuscleGroup(set.exerciseId);
@@ -80,7 +77,7 @@ export default function WorkoutScreen() {
 	}, {} as Record<MuscleGroup, Record<string, WorkoutSet[]>>);
 
 	return (
-		<SafeAreaView className={'flex-1'}>
+		<SafeAreaView className={'flex-1'} edges={['top']}>
 			<View className={'flex-1 bg-white'}>
 				<ScrollView className={'flex-1'}>
 					<View
@@ -126,11 +123,25 @@ export default function WorkoutScreen() {
 									exerciseId={exerciseId}
 									sets={sets}
 									workoutId={workout.id}
+									onSetComplete={() => timerRef.current?.startTimer()}
 								/>
 							))}
 						</View>
 					))}
 				</ScrollView>
+
+				<RestTimer ref={timerRef} />
+
+				<WorkoutCalendarModal
+					visible={calendarVisible}
+					onClose={() => setCalendarVisible(false)}
+					mesocycle={currentMeso}
+					currentWorkoutId={workout.id}
+					onSelectWorkout={(workoutId) => {
+						setCurrentWorkout(workoutId);
+						setCalendarVisible(false);
+					}}
+				/>
 			</View>
 		</SafeAreaView>
 	);

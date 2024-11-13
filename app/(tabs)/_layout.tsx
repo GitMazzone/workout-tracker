@@ -19,7 +19,7 @@ export default function TabLayout() {
 			<Tabs.Screen
 				name={'workout'}
 				options={{
-					title: 'Current',
+					title: 'Workout',
 					tabBarIcon: ({ color }) => <Dumbbell size={24} color={color} />,
 				}}
 			/>
