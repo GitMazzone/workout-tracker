@@ -34,7 +34,7 @@ export const generateWorkouts = (template: MesocycleTemplate): WorkoutDay[] => {
 			muscleGroups.forEach((muscleGroup) => {
 				const exerciseId = template.exercises[`${day}-${muscleGroup}`];
 				if (exerciseId) {
-					sets.push(...generateWorkoutSets(exerciseId, week));
+					sets.push(...generateWorkoutSets(exerciseId, week, template.weeks));
 				}
 			});
 

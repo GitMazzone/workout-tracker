@@ -98,7 +98,9 @@ export function WorkoutCalendarModal({
 							{workoutsByWeek.map((week, weekIndex) => (
 								<View key={weekIndex} className={'mb-6'}>
 									<Text className={'text-lg font-semibold px-4 py-2'}>
-										Week {weekIndex + 1}
+										{weekIndex === workoutsByWeek.length - 1
+											? 'Deload'
+											: `Week ${weekIndex + 1}`}
 									</Text>
 
 									<ScrollView
