@@ -1,4 +1,4 @@
-import { WorkoutState } from '../types';
+import { WorkoutState } from '../workout.types';
 
 export const updateSetWeight =
 	(setState: any) => (workoutId: string, setIndex: number, weight: number) => {

@@ -2,7 +2,6 @@ import { View, Text, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { Stack, useLocalSearchParams, router } from 'expo-router';
 import { useState } from 'react';
 import { MuscleGroup } from '@/store/types';
-import { TEMPLATES } from '@/constants/templates';
 import { ChevronRight } from 'lucide-react-native';
 
 const MUSCLE_GROUPS: MuscleGroup[] = [

@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { useWorkoutStore } from '@/store/workout';
-import { Settings, CheckCircle2, Circle } from 'lucide-react-native';
+import { Settings } from 'lucide-react-native';
 import { useState } from 'react';
 import { SettingsModal } from '@/components/SettingsModal';
 import { MesoMenu } from '@/components/MesoMenu';

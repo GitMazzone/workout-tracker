@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity, Modal } from 'react-native';
 import { PartyPopper, ChevronRight, XCircle } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { WorkoutDay } from '@/store/workout/types';
+import { WorkoutDay } from '@/store/workout';
 import { Confetti } from './Confetti';
 
 interface Props {

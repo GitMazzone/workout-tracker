@@ -1,6 +1,6 @@
 import { addDays, format } from 'date-fns';
 import { TEMPLATES } from '@/constants/templates';
-import { MesocycleTemplate, WorkoutDay, WorkoutSet } from '../types';
+import { MesocycleTemplate, WorkoutDay, WorkoutSet } from '../workout.types';
 import { generateWorkoutSets } from './generateSets';
 import { MuscleGroup } from '@/store/types';
 

@@ -1,5 +1,5 @@
 import { DATA_VERSION } from '@/config/app';
-import type { WorkoutSet, WorkoutDay, Mesocycle } from '@/store/workout/types';
+import type { WorkoutSet, WorkoutDay, Mesocycle } from '@/store/workout';
 
 interface ImportData {
 	version: string;

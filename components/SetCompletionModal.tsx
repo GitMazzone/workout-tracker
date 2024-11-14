@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity, Modal, TextInput } from 'react-native';
 import { X } from 'lucide-react-native';
 import { useState } from 'react';
-import { WorkoutSet } from '@/store/types';
+import { WorkoutSet } from '@/store/workout';
 
 interface Props {
 	visible: boolean;

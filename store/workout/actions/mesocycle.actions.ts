@@ -1,5 +1,4 @@
-import { WorkoutState } from '../types';
-import { Mesocycle, MesocycleTemplate } from '../types';
+import { Mesocycle, MesocycleTemplate, WorkoutState } from '../workout.types';
 import { MuscleGroup } from '../../types';
 import { format } from 'date-fns';
 import { generateWorkouts } from '../utils/generateWorkouts';

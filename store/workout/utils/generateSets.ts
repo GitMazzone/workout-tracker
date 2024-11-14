@@ -1,4 +1,4 @@
-import { WorkoutSet } from '../types';
+import { WorkoutSet } from '../workout.types';
 
 export const generateWorkoutSets = (
 	exerciseId: string,

@@ -1,4 +1,4 @@
-import { WorkoutState } from '../types';
+import { WorkoutState } from '../workout.types';
 
 export const completeSet =
 	(setState: any) =>

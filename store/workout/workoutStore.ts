@@ -22,7 +22,7 @@ import {
 	skipWorkout,
 	replaceExercise,
 } from './actions/workout.actions';
-import { WorkoutState } from './types';
+import { WorkoutState } from './workout.types';
 
 export const useWorkoutStore = create<WorkoutState>()(
 	persist(

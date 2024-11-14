@@ -1,5 +1,5 @@
 import { EXERCISES } from '@/constants/exercises';
-import { replaceExercise, useWorkoutStore, WorkoutSet } from '@/store/workout';
+import { useWorkoutStore, WorkoutSet } from '@/store/workout';
 import {
 	Trash2,
 	Check,
