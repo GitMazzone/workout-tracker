@@ -6,7 +6,7 @@ export const generateWorkoutSets = (
 	totalWeeks: number
 ): WorkoutSet[] => {
 	const isDeloadWeek = weekIndex === totalWeeks - 1;
-	const sets = weekIndex < 2 ? 3 : 4;
+	const sets = isDeloadWeek ? 2 : weekIndex < 2 ? 3 : 4;
 	const reps = weekIndex % 2 === 0 ? 8 : 10;
 
 	return Array(isDeloadWeek ? 2 : sets)
