@@ -121,7 +121,12 @@ export default function WorkoutScreen() {
 							'flex-row justify-between items-center p-4 border-b border-gray-200'
 						}
 					>
-						<Text className={'text-2xl font-bold'}>{currentMeso.name}</Text>
+						<Text
+							className={'text-xl font-bold max-w-[60%] truncate'}
+							numberOfLines={1}
+						>
+							{currentMeso.name}
+						</Text>
 						<View className={'flex-row gap-2'}>
 							<TouchableOpacity
 								className={
